@@ -1,0 +1,399 @@
+/* Cocktails — dunkle Bar-Optik, hell als Alternative */
+
+:root {
+  --bg: #16130f;
+  --bg-raised: #211c16;
+  --border: #3a3129;
+  --ink: #f2ece3;
+  --ink-dim: #a99e8e;
+  --accent: #e8a33d;
+  --accent-ink: #16130f;
+  --radius: 14px;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #fbf7f0;
+    --bg-raised: #fff;
+    --border: #e3d9c9;
+    --ink: #1e1a15;
+    --ink-dim: #6d6355;
+    --accent: #b26b12;
+    --accent-ink: #fff;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: inherit; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Kopf- und Fußzeile */
+
+/* Umbruch erlaubt: auf schmalen Telefonen rutschen Zurück-Link und Schalter in eine
+   zweite Zeile, statt dass einer von beiden unleserlich zusammengequetscht wird. */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.25rem 1rem;
+  max-width: 960px; margin: 0 auto; padding: 1.25rem 1.25rem 0;
+}
+
+.wordmark {
+  margin-right: auto; /* schiebt Zurück-Link und Schalter nach rechts */
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+}
+
+/* Padding, damit der meistbenutzte Link auch mit klebrigen Fingern zu treffen ist */
+.back {
+  color: var(--ink-dim); font-size: 0.9rem; text-decoration: none;
+  display: inline-block; padding: 0.65rem 0; margin: -0.65rem 0;
+}
+.back:hover { color: var(--accent); }
+
+/* Schloss für die Bildschirmsperre. Steht nur da, wenn wakelock.js es einhängt —
+   in Browsern ohne Wake-Lock-API gibt es keine tote Schaltfläche zu drücken.
+   Geschlossenes Schloss = der Bildschirm bleibt an. Was der Zustand bedeutet und
+   warum er gegebenenfalls nicht hält, steht im Tooltip. */
+.wakelock-toggle {
+  display: inline-flex; /* Die Fläche ist absichtlich größer als das Schloss: klebrige Finger */
+  padding: 0.6rem; margin: -0.6rem -0.6rem -0.6rem auto;
+  color: var(--ink-dim);
+  background: none; border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.wakelock-toggle svg { width: 1.25rem; height: 1.25rem; display: block; }
+.wakelock-toggle:hover { color: var(--accent); }
+.wakelock-toggle[data-state="an"] { color: var(--accent); }
+
+/* nav.js setzt den Fokus nach dem Seitenwechsel hierher; sichtbar sein muss er nicht. */
+main:focus { outline: none; }
+
+.site-footer {
+  max-width: 960px; margin: 4rem auto 0; padding: 1.5rem 1.25rem 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--ink-dim); font-size: 0.85rem;
+}
+
+/* Version neben der Rezeptzahl: gleiche Zeile, aber ruhiger — sie ist eine Fußnote
+   für den, der wissen will, ob sein Telefon den neuesten Stand zeigt. */
+.site-footer .version {
+  margin-left: 0.5rem; padding: 0.05em 0.45em;
+  border: 1px solid var(--border); border-radius: 999px;
+  font-size: 0.9em; font-variant-numeric: tabular-nums;
+  white-space: nowrap; opacity: 0.8;
+}
+
+main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* Startseite */
+
+.hero { padding: 2.5rem 0 1.5rem; }
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 9vw, 3.6rem);
+  line-height: 1.05;
+  margin: 0;
+}
+
+.hero p { color: var(--ink-dim); margin: 0.4rem 0 0; }
+
+.search { position: sticky; top: 0; z-index: 5; padding: 0.75rem 0 1.25rem; background: var(--bg); }
+
+.search input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  appearance: none;
+}
+
+.search input::placeholder { color: var(--ink-dim); }
+
+.search input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.search-status { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--ink-dim); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card[hidden] { display: none; }
+.card > a { display: block; text-decoration: none; height: 100%; }
+
+.card img, .card .thumb {
+  display: block;
+  width: 100%;
+  height: auto; /* sonst gewinnt das height-Attribut über aspect-ratio */
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.card-body { padding: 0.9rem 1rem 1.1rem; }
+
+.card-body h2 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin: 0 0 0.3rem;
+}
+
+/* Ein Satz dazu, wie der Drink schmeckt — steht zwischen Namen und Basis */
+.card-sub {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink-dim);
+}
+
+.card-base {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.card-ing { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--ink-dim); }
+
+.empty { color: var(--ink-dim); padding: 2rem 0; }
+
+/* Platzhalter, wenn kein Foto vorhanden ist */
+
+/* display muss spezifischer sein als `.card .thumb { display: block }` */
+.card .thumb.placeholder,
+.recipe-photo.placeholder {
+  display: grid;
+  place-items: center;
+}
+
+.placeholder {
+  background: linear-gradient(150deg, #3b2f22, #241d16);
+}
+
+.placeholder span {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  color: rgb(255 255 255 / 0.5);
+}
+
+.placeholder[data-base="gin"]        { background: linear-gradient(150deg, #2f4a4a, #1b2b2b); }
+.placeholder[data-base="sekt"]       { background: linear-gradient(150deg, #6d5a26, #33290f); }
+.placeholder[data-base="wodka"]      { background: linear-gradient(150deg, #3a2c22, #201812); }
+.placeholder[data-base="rum"]        { background: linear-gradient(150deg, #2c4630, #17251a); }
+.placeholder[data-base="select"]     { background: linear-gradient(150deg, #6d2222, #331010); }
+.placeholder[data-base="sarti"]      { background: linear-gradient(150deg, #7a2b3a, #3a141c); }
+.placeholder[data-base="aperol"]     { background: linear-gradient(150deg, #a1521a, #4a230b); }
+.placeholder[data-base="limoncello"] { background: linear-gradient(150deg, #8a7620, #3f360c); }
+
+/* Rezeptseite */
+
+.recipe { padding: 2rem 0 0; }
+
+.recipe-head { display: grid; gap: 1.75rem; align-items: start; }
+
+@media (min-width: 700px) {
+  .recipe-head { grid-template-columns: 260px 1fr; gap: 2.25rem; }
+}
+
+.recipe-photo {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Auf schmalen Displays als Banner, damit der Titel sofort sichtbar ist */
+@media (max-width: 699px) {
+  .recipe-photo {
+    max-width: none;
+    aspect-ratio: 16 / 10;
+    object-position: center 35%;
+  }
+}
+
+.recipe-title h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  line-height: 1.08;
+  margin: 0;
+}
+
+.subtitle { margin: 0.35rem 0 0; color: var(--ink-dim); font-style: italic; }
+
+.meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1.5rem 0 0; }
+.meta dt {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.meta dd { margin: 0.15rem 0 0; font-weight: 500; }
+
+.ingredients, .preparation { margin-top: 2.75rem; }
+
+.ingredients h2, .preparation h2 {
+  font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 0.75rem;
+}
+
+.ingredients table { width: 100%; border-collapse: collapse; max-width: 480px; }
+
+.ingredients th {
+  text-align: left;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim); font-weight: 500;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ingredients td { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+
+/* Die Mengen sind beim Mixen das Wichtigste — volle Helligkeit statt gedämpft,
+   und gleich breite Ziffern, damit die Spalte auf einen Blick zu lesen ist. */
+.ingredients td:last-child {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.preparation p { margin: 0; max-width: 34em; }
+
+/* Hinweise nach der Anleitung — rohes Eiweiß, Zuckersirup, Ersatzzutaten.
+   Nicht h2 + p: das ist die Anleitung selbst und bleibt normal hell. */
+.preparation > :not(h2) + p {
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+
+/* Zubereitung als Schritte, falls das Rezept eine Liste statt Prosa benutzt */
+.preparation ol, .preparation ul { margin: 0; padding-left: 1.5rem; max-width: 34em; }
+.preparation li { margin-bottom: 0.45rem; }
+.preparation li:last-child { margin-bottom: 0; }
+.preparation li::marker { color: var(--accent); font-size: 0.85em; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; margin: 2.75rem 0 0; padding: 0; }
+
+.chips a {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.chips a:hover { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+
+/* Foto vergrößern */
+
+.photo-zoom { display: block; cursor: zoom-in; border-radius: var(--radius); }
+.photo-zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Overlay-Ansicht; der Hintergrund ist immer dunkel, daher feste Farben statt Variablen */
+.lightbox {
+  /* fit-content statt auto: sonst füllt der Dialog die Breite und das Bild klebt links */
+  width: fit-content;
+  height: fit-content;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+}
+
+.lightbox::backdrop { background: rgb(8 6 4 / 0.92); }
+
+.lightbox img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: 94vh;
+  border-radius: var(--radius);
+}
+
+/* Der Hintergrund schließt, das Bild nicht — der Zeiger soll das zeigen */
+.lightbox { cursor: zoom-out; }
+.lightbox img { cursor: default; }
+
+.lightbox-close {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #fff;
+  background: rgb(0 0 0 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lightbox-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Seite dahinter nicht mitscrollen lassen. Hängt am [open]-Attribut des Dialogs statt an
+   einer Klasse aus dem Skript — so kann die Sperre nicht hängen bleiben, wenn ein Ereignis
+   einmal ausbleibt. */
+html:has(.lightbox[open]), html:has(.lightbox[open]) body { overflow: hidden; }
+
+.lightbox[open], .lightbox[open]::backdrop { animation: lightbox-in 0.18s ease-out; }
+
+@keyframes lightbox-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  .lightbox[open], .lightbox[open]::backdrop { animation: none; }
+}

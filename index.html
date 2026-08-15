@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cocktails</title>
+<meta name="description" content="Rezepte für zu Hause">
+<meta name="color-scheme" content="dark light">
+<link rel="stylesheet" href="/cocktails/assets/style.css">
+<link rel="icon" href="/cocktails/assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-header">
+  <a class="wordmark" href="/cocktails/">Cocktails</a>
+  
+</header>
+
+<main>
+<div class="hero">
+  <h1>Cocktails</h1>
+  <p>Rezepte für zu Hause</p>
+</div>
+
+<form class="search" role="search" onsubmit="return false">
+  <label class="visually-hidden" for="q">Rezepte durchsuchen</label>
+  <input type="search" id="q" name="q" placeholder="Suche nach Name, Zutat oder Stichwort …"
+         autocomplete="off" spellcheck="false" enterkeyhint="search">
+  <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
+</form>
+
+<ul class="grid" id="grid">
+  <li class="card" data-search="aperol spritz leicht, bittersuess und spritzig — der klassiker fuer draussen aperol grosses weinglas orangenscheibe aperol spritz sekt aperitivo erfrischend sommer bitter suess leicht einfach aperol 60 ml cointreau (optional) 20 ml sekt 130 ml tonic 20 ml orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/aperol-spritz/">
+      <img src="/cocktails/assets/img/aperol-spritz.webp" alt="" width="400" height="300" loading="lazy">
+      <div class="card-body">
+        <h2>Aperol Spritz</h2><p class="card-sub">Leicht, bittersüß und spritzig — der Klassiker für draußen</p>
+        <p class="card-base">Aperol</p>
+        <p class="card-ing">Aperol · Cointreau (optional) · Sekt · Tonic</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="corpse reviver #2 zitrus und anis, taeuschend sueffig fuer seine staerke gin cocktailglas orangenscheibe gin absinth cointreau lillet geschuettelt sour klassiker kraeftig zitrus gin 30 ml cointreau 30 ml lillet blanc/cocchi americano 30 ml zitronensaft 30 ml absinth 1/2 teeloeffel orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/corpse-reviver-2/">
+      <img src="/cocktails/assets/img/corpse-reviver-2.webp" alt="" width="400" height="300" loading="lazy" style="object-position: center 18%">
+      <div class="card-body">
+        <h2>Corpse Reviver #2</h2><p class="card-sub">Zitrus und Anis, täuschend süffig für seine Stärke</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Cointreau · Lillet Blanc/Cocchi Americano · Zitronensaft · Absinth</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="espresso martini suess, bitter und wach — dessert und kaffee in einem wodka cocktailschale kaffeebohne wodka kaffee espresso kaffeelikoer geschuettelt dessert suess kraeftig wodka 25 ml kaffeelikoer 30 ml espresso doppio 36 – 40 g zuckersirup (2:1) 10 ml salz 1 prise kaffeebohne 1 stueck">
+    <a href="/cocktails/rezepte/espresso-martini/">
+      <div class="thumb placeholder" data-base="wodka" aria-hidden="true"><span>E</span></div>
+      <div class="card-body">
+        <h2>Espresso Martini</h2><p class="card-sub">Süß, bitter und wach — Dessert und Kaffee in einem</p>
+        <p class="card-base">Wodka</p>
+        <p class="card-ing">Wodka · Kaffeelikör · Espresso doppio · Zuckersirup (2:1) · Salz</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="french 75 prickelnd und zitronig, trinkt sich gefaehrlich schnell gin sektglas zitronenzeste gin sekt geschuettelt sour klassiker prickelnd zitrus erfrischend gin 30 ml zitronensaft 20 ml zuckersirup (2:1) 10 ml sekt 100 ml zitronenzeste 1 stueck">
+    <a href="/cocktails/rezepte/french-75/">
+      <img src="/cocktails/assets/img/french-75.webp" alt="" width="400" height="300" loading="lazy">
+      <div class="card-body">
+        <h2>French 75</h2><p class="card-sub">Prickelnd und zitronig, trinkt sich gefährlich schnell</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Zitronensaft · Zuckersirup (2:1) · Sekt</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="gin &amp; tonic herb und einfach — geht immer gin longdrinkglas — gin tonic longdrink einfach erfrischend leicht bitter gin 50 ml tonic 125 ml">
+    <a href="/cocktails/rezepte/gin-tonic/">
+      <div class="thumb placeholder" data-base="gin" aria-hidden="true"><span>G</span></div>
+      <div class="card-body">
+        <h2>Gin &amp; Tonic</h2><p class="card-sub">Herb und einfach — geht immer</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Tonic</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="gin sour sauer, klar und unkompliziert gin tumbler zitronenscheibe gin zitrone zuckersirup soda geschuettelt sour klassiker zitrus gin 50 ml zitronensaft 30 ml zuckersirup (2:1) 20 ml soda ca. 100 ml">
+    <a href="/cocktails/rezepte/gin-sour/">
+      <div class="thumb placeholder" data-base="gin" aria-hidden="true"><span>G</span></div>
+      <div class="card-body">
+        <h2>Gin Sour</h2><p class="card-sub">Sauer, klar und unkompliziert</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Zitronensaft · Zuckersirup (2:1) · Soda</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="limoncello spritz suesssauer nach zitrone, so leicht wie ein spritz sein soll limoncello grosses weinglas zitronenzeste limoncello spritz sekt zitrone aperitivo sommer erfrischend suess leicht einfach limoncello 50 ml sekt 120 ml tonic 20 ml zitronenzeste 1 stueck">
+    <a href="/cocktails/rezepte/limoncello-spritz/">
+      <img src="/cocktails/assets/img/limoncello-spritz.webp" alt="" width="400" height="300" loading="lazy" style="object-position: center 10%">
+      <div class="card-body">
+        <h2>Limoncello Spritz</h2><p class="card-sub">Süßsauer nach Zitrone, so leicht wie ein Spritz sein soll</p>
+        <p class="card-base">Limoncello</p>
+        <p class="card-ing">Limoncello · Sekt · Tonic</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="mojito minzig, frisch und lang — der sommerdrink rum longdrinkglas minzstraeusschen rum minze limette longdrink erfrischend klassiker sommer leicht weisser rum 50 ml limette 1 stueck minze ca. 12 blaetter + 1 straeusschen rohrzucker 2 teeloeffel soda ca. 30 ml">
+    <a href="/cocktails/rezepte/mojito/">
+      <img src="/cocktails/assets/img/mojito.webp" alt="" width="400" height="300" loading="lazy" style="object-position: center 20%">
+      <div class="card-body">
+        <h2>Mojito</h2><p class="card-sub">Minzig, frisch und lang — der Sommerdrink</p>
+        <p class="card-base">Rum</p>
+        <p class="card-ing">Weißer Rum · Limette · Minze · Rohrzucker · Soda</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="negroni bitter, kraeftig, kompromisslos gin tumbler orangenscheibe gin campari wermut aperitivo bitter geruehrt klassiker kraeftig gin 30 ml campari 30 ml roter wermut 30 ml orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/negroni/">
+      <div class="thumb placeholder" data-base="gin" aria-hidden="true"><span>N</span></div>
+      <div class="card-body">
+        <h2>Negroni</h2><p class="card-sub">Bitter, kräftig, kompromisslos</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Campari · Roter Wermut</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="negroni sbagliato der negroni mit sekt statt gin — leichter und spritziger sekt tumbler orangenscheibe sekt campari wermut aperitivo bitter negroni variante leicht prickelnd einfach campari 30 ml roter wermut 30 ml sekt 60 ml orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/negroni-sbagliato/">
+      <div class="thumb placeholder" data-base="sekt" aria-hidden="true"><span>N</span></div>
+      <div class="card-body">
+        <h2>Negroni Sbagliato</h2><p class="card-sub">Der Negroni mit Sekt statt Gin — leichter und spritziger</p>
+        <p class="card-base">Sekt</p>
+        <p class="card-ing">Campari · Roter Wermut · Sekt</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="negroni sbagliato speciale ++ sbagliato mit gin obendrauf — kraeftiger als das original sekt tumbler orangenscheibe sekt campari wermut gin tonic aperitivo negroni variante bitter kraeftig campari 30 ml roter wermut 30 ml gin 15 ml sekt 100 ml tonic 20 ml orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/negroni-sbagliato-speciale/">
+      <img src="/cocktails/assets/img/negroni-sbagliato-speciale.webp" alt="" width="400" height="300" loading="lazy">
+      <div class="card-body">
+        <h2>Negroni Sbagliato speciale ++</h2><p class="card-sub">Sbagliato mit Gin obendrauf — kräftiger als das Original</p>
+        <p class="card-base">Sekt</p>
+        <p class="card-ing">Campari · Roter Wermut · Gin · Sekt · Tonic</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="old opera samtiger schaum ueber campari und zitrone gin longdrinkglas orangenscheibe gin campari zitrone eiweiss zuckersirup soda geschuettelt sour longdrink bitter cremig zitrus gin 30 ml campari 20 ml zitronensaft 30 ml zuckersirup (2:1) 10 ml eiweiss 1 stueck soda zum auffuellen">
+    <a href="/cocktails/rezepte/old-opera/">
+      <img src="/cocktails/assets/img/old-opera.webp" alt="" width="400" height="300" loading="lazy" style="object-position: center 22%">
+      <div class="card-body">
+        <h2>Old Opera</h2><p class="card-sub">Samtiger Schaum über Campari und Zitrone</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Campari · Zitronensaft · Zuckersirup (2:1) · Eiweiß · Soda</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="sarti spritz fruchtig-blumig und mild, suesser als ein aperol spritz sarti grosses weinglas orangenscheibe sarti spritz sekt aperitivo sommer erfrischend leicht suess einfach sarti 60 ml gin (optional) 30 ml sekt 100 ml tonic 35 ml soda 35 ml orangenscheibe 1 stueck">
+    <a href="/cocktails/rezepte/sarti-spritz/">
+      <div class="thumb placeholder" data-base="sarti" aria-hidden="true"><span>S</span></div>
+      <div class="card-body">
+        <h2>Sarti Spritz</h2><p class="card-sub">Fruchtig-blumig und mild, süßer als ein Aperol Spritz</p>
+        <p class="card-base">Sarti</p>
+        <p class="card-ing">Sarti · Gin (optional) · Sekt · Tonic · Soda</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="select spritz herber venezianer, bitterer als ein aperol spritz select grosses weinglas gruene olive select spritz sekt aperitivo bitter venedig olive erfrischend leicht einfach select 40 ml martini bianco (optional) 30 ml sekt 120 ml tonic 35 ml soda 35 ml">
+    <a href="/cocktails/rezepte/select-spritz/">
+      <div class="thumb placeholder" data-base="select" aria-hidden="true"><span>S</span></div>
+      <div class="card-body">
+        <h2>Select Spritz</h2><p class="card-sub">Herber Venezianer, bitterer als ein Aperol Spritz</p>
+        <p class="card-base">Select</p>
+        <p class="card-ing">Select · Martini Bianco (optional) · Sekt · Tonic · Soda</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="the last word kraeutrig und kraeftig, nichts zum nebenbeitrinken gin cocktailglas — gin chartreuse maraschino limette geschuettelt klassiker kraeftig zitrus gin 20 ml chartreuse (gruen) 20 ml maraschino 20 ml limettensaft 20 ml">
+    <a href="/cocktails/rezepte/the-last-word/">
+      <div class="thumb placeholder" data-base="gin" aria-hidden="true"><span>T</span></div>
+      <div class="card-body">
+        <h2>The Last Word</h2><p class="card-sub">Kräutrig und kräftig, nichts zum Nebenbeitrinken</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Chartreuse (grün) · Maraschino · Limettensaft</p>
+      </div>
+    </a>
+  </li>
+  <li class="card" data-search="white lady cremig-zitronig und eleganter, als sie stark ist gin cocktailschale zitronenzeste (optional) gin cointreau orangenlikoer zitrone eiweiss zuckersirup geschuettelt sour klassiker cremig zitrus gin 40 ml cointreau 20 ml zitronensaft 20 ml zuckersirup (2:1) 10 ml eiweiss 1 stueck">
+    <a href="/cocktails/rezepte/white-lady/">
+      <div class="thumb placeholder" data-base="gin" aria-hidden="true"><span>W</span></div>
+      <div class="card-body">
+        <h2>White Lady</h2><p class="card-sub">Cremig-zitronig und eleganter, als sie stark ist</p>
+        <p class="card-base">Gin</p>
+        <p class="card-ing">Gin · Cointreau · Zitronensaft · Zuckersirup (2:1) · Eiweiß</p>
+      </div>
+    </a>
+  </li>
+</ul>
+
+<p class="empty" id="empty" hidden>Keine Rezepte gefunden.</p>
+
+<script src="/cocktails/assets/search.js" defer></script>
+
+</main>
+
+<footer class="site-footer">
+  <p>16 Rezepte <span class="version" title="Build vom 2026-08-15 · d302466">v1.0.16</span></p>
+</footer>
+
+
+<script src="/cocktails/assets/nav.js" defer></script>
+<script src="/cocktails/assets/wakelock.js" defer></script>
+</body>
+</html>
