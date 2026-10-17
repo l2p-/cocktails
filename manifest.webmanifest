@@ -1,0 +1,16 @@
+{
+  "name": "Cocktails",
+  "short_name": "Cocktails",
+  "description": "Rezepte für zu Hause",
+  "lang": "de",
+  "start_url": "/cocktails/",
+  "scope": "/cocktails/",
+  "display": "standalone",
+  "background_color": "#16130f",
+  "theme_color": "#16130f",
+  "icons": [
+    { "src": "/cocktails/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/cocktails/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/cocktails/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
