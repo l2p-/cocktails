@@ -1,0 +1,1045 @@
+/* Cocktails — dunkle Bar-Optik, hell als Alternative */
+
+:root {
+  --bg: #16130f;
+  --bg-raised: #211c16;
+  --border: #3a3129;
+  /* Für Konturen, die ein Bedienelement kennzeichnen (Suchfeld): mindestens 3:1
+     gegen beide Hintergründe (gemessen 3,7:1 / 3,4:1) — --border ist dafür zu leise. */
+  --border-strong: #7a6e5f;
+  --ink: #f2ece3;
+  --ink-dim: #a99e8e;
+  --accent: #e8a33d;
+  --accent-ink: #16130f;
+  --radius: 14px;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #fbf7f0;
+    --bg-raised: #fff;
+    --border: #e3d9c9;
+    --border-strong: #8f826f;
+    --ink: #1e1a15;
+    --ink-dim: #6d6355;
+    /* Dunkler als das frühere #b26b12: Text in Akzentfarbe (Wortmarke, Überschriften,
+       Karten-Label) braucht 4,5:1 auf hellem Grund — gemessen 5,0:1 auf --bg,
+       5,4:1 auf Weiß, und Weiß auf dieser Farbe (gewählter Chip) 5,4:1. */
+    --accent: #9a5c0f;
+    --accent-ink: #fff;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: inherit; }
+
+/* Ein sichtbarer Fokusring für alles Bedienbare — nicht nur für die drei Elemente,
+   die zufällig eigene Regeln hatten; der Browser-Standard passt nicht zur Optik. */
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Kopf- und Fußzeile */
+
+/* Die Kopfzeile klebt oben, auf jeder Seite: Mixplan, Teilen und Schloss bleiben einen
+   Daumen entfernt, auch tief in einem langen Rezept. Was sonst oben klebt oder dorthin
+   springt (die Suche der Übersicht, #titel, ein per Tab angesteuertes Feld), rechnet mit
+   ihrer Höhe (--kopf-hoehe). Normal ist das genau eine Zeile; wird es eng, kürzt sich
+   erst der Zurück-Link. Nur wenn selbst Glas und Knöpfe nicht mehr nebeneinander passen
+   (sehr große Schrift auf einem kleinen Telefon), bricht sie um — dann trägt nav.js die
+   echte Höhe in --kopf-hoehe nach.
+   Der Hintergrund geht über die ganze Breite, damit am Rechner nichts seitlich
+   durchscheint; der Inhalt steht trotzdem bündig mit <main> (--kopf-rand). Der
+   Hinweistext von Teilen und Schloss hängt sich an diese Box. */
+:root { --kopf-hoehe: 3.5rem; }
+html { scroll-padding-top: calc(var(--kopf-hoehe) + 0.5rem); }
+.site-header {
+  --kopf-rand: max(1.25rem, calc((100% - 960px) / 2 + 1.25rem));
+  position: sticky; top: 0; z-index: 10;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 0.5rem;
+  min-height: 3.5rem;
+  padding: 0 var(--kopf-rand);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.wordmark {
+  margin-right: auto; /* schiebt Zurück-Link und Schalter nach rechts */
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+}
+.wordmark-logo { display: none; width: 1.75rem; height: 1.75rem; }
+
+/* Mit drei Knöpfen (Mixplan, Teilen, Schloss) braucht die Kopfzeile der Rezeptseite mit
+   Schriftzug gut 400 px. Darunter steht statt des Schriftzugs nur das Glas aus dem Icon —
+   so passt sie bis 320 px in eine Zeile. Nach Breite statt nach Seite: Wechselte der
+   Schriftzug mit dem Zurück-Link, spränge die Kopfzeile bei jedem Seitenwechsel. Das
+   Polster macht das Glas zur 44-px-Tippfläche, der negative Rand hält es bündig links. */
+@media (max-width: 26rem) {
+  .wordmark { display: inline-flex; padding: 0.5rem; margin: -0.5rem auto -0.5rem -0.5rem; }
+  .wordmark-logo { display: block; }
+  .wordmark-text {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* Padding, damit der meistbenutzte Link auch mit klebrigen Fingern zu treffen ist. Er
+   füllt den Platz zwischen Schriftzug und Knöpfen (Text mittig, wie vorher zwischen
+   zwei automatischen Rändern) und zählt beim Umbrechen der Kopfzeile nicht mit
+   (Basis 0) — wird es eng, kürzt er sich mit „…", statt eine zweite Zeile zu erzwingen. */
+.back {
+  flex: 1 1 0; min-width: 0;
+  color: var(--ink-dim); font-size: 0.9rem; text-decoration: none; text-align: center;
+  display: inline-block; padding: 0.65rem 0; margin: -0.65rem 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.back:hover { color: var(--accent); }
+
+/* Mixplan, Teilen und Schloss: eine Gruppe am rechten Rand, die nie schrumpft — wird es
+   eng, gibt der Zurück-Link nach. Der negative Rand rechts lässt das Polster des letzten
+   Knopfs in den Seitenrand ragen, damit das Symbol bündig mit dem Inhalt darunter steht. */
+.kopf-aktionen { display: flex; flex: none; align-items: center; margin: 0 -0.75rem 0 auto; }
+
+/* Mixplan, Teilen-Knopf und Schloss für die Bildschirmsperre. Alle stehen nur da, wenn
+   ihr Skript sie braucht — ohne Wake-Lock-API bzw. ohne Teilen und Zwischenablage gibt
+   es keine tote Schaltfläche zu drücken. Geschlossenes Schloss = der Bildschirm
+   bleibt an. Die Fläche ist mit 0.75rem Polster rund um das 20-px-Symbol ~44 px
+   groß — klebrige Finger; nebeneinander stoßen die Flächen aneinander, ohne sich
+   zu überlappen. */
+.mixplan-knopf, .teilen-knopf, .wakelock-toggle {
+  display: inline-flex;
+  padding: 0.75rem; margin: -0.75rem 0;
+  color: var(--ink-dim);
+  background: none; border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Die Tippfläche des ersten Knopfs darf in die Lücke zum Zurück-Link ragen. */
+.mixplan-knopf { position: relative; margin-left: -0.5rem; }
+.mixplan-knopf[hidden], .teilen-knopf[hidden] { display: none; }
+.mixplan-knopf svg, .teilen-knopf svg, .wakelock-toggle svg { width: 1.25rem; height: 1.25rem; display: block; }
+.mixplan-knopf:hover, .teilen-knopf:hover, .wakelock-toggle:hover { color: var(--accent); }
+.wakelock-toggle[data-state="an"], .mixplan-knopf[aria-current="page"] { color: var(--accent); }
+
+/* Zahl der geplanten Drinks, wie am Warenkorb: oben rechts am Symbol, mit einem Ring in
+   Hintergrundfarbe, damit sie sich vom Strich darunter abhebt. */
+.mixplan-zahl {
+  position: absolute; top: 0.3rem; right: 0.15rem;
+  min-width: 1.15rem; height: 1.15rem; padding: 0 0.25rem;
+  display: grid; place-items: center;
+  font-size: 0.68rem; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink); background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.mixplan-zahl[hidden] { display: none; }
+
+/* Was der Tipp auf Schloss oder Teilen bewirkt hat, steht kurz sichtbar darunter —
+   auf dem Telefon gibt es keinen Tooltip, der es erklären könnte. */
+.wakelock-hinweis, .teilen-hinweis {
+  position: absolute;
+  top: 100%; right: var(--kopf-rand);
+  margin-top: 0.4rem; padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 6;
+}
+.wakelock-hinweis.sichtbar, .teilen-hinweis.sichtbar { opacity: 1; }
+
+/* nav.js setzt den Fokus nach dem Seitenwechsel hierher; sichtbar sein muss er nicht. */
+main:focus { outline: none; }
+
+/* Rückmeldung, während nav.js eine Seite holt — erst nach kurzer Gnadenfrist
+   (siehe nav.js), damit schnelle Wechsel ruhig bleiben. */
+html.laedt main { opacity: 0.5; transition: opacity 0.15s; }
+html.laedt { cursor: progress; }
+
+/* Meldung, wenn ein Seitenwechsel am Netz gescheitert ist und wir bleiben. */
+.verbindungs-hinweis {
+  position: fixed;
+  top: 0.75rem; left: 50%;
+  transform: translateX(-50%);
+  margin: 0; padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 20;
+}
+.verbindungs-hinweis.sichtbar { opacity: 1; }
+
+.site-footer {
+  max-width: 960px; margin: 4rem auto 0; padding: 1.5rem 1.25rem 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--ink-dim); font-size: 0.85rem;
+}
+
+/* Version neben der Rezeptzahl: gleiche Zeile, aber ruhiger — sie ist eine Fußnote
+   für den, der wissen will, ob sein Telefon den neuesten Stand zeigt. Keine
+   zusätzliche Transparenz: die gedämpfte Farbe ist schon die Untergrenze für 4,5:1. */
+.site-footer .version {
+  margin-left: 0.5rem; padding: 0.05em 0.45em;
+  border: 1px solid var(--border); border-radius: 999px;
+  font-size: 0.9em; font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Datum und Commit des Builds — sichtbar statt im Tooltip, den es auf dem
+   Telefon nicht gibt. */
+.site-footer .version-info { font-size: 0.9em; }
+
+main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem; }
+
+/* Startseite */
+
+.hero { padding: 2.5rem 0 1.5rem; }
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 9vw, 3.6rem);
+  line-height: 1.05;
+  margin: 0;
+}
+
+.hero p { color: var(--ink-dim); margin: 0.4rem 0 0; }
+
+/* Klebt direkt unter der Kopfzeile, die selbst oben klebt. */
+.search { position: sticky; top: var(--kopf-hoehe); z-index: 5; padding: 0.75rem 0 0.75rem; background: var(--bg); }
+
+.search input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg-raised);
+  /* --border-strong: Das Feld muss auch ohne Platzhaltertext als Feld erkennbar
+     sein — die leise Kartenlinie schafft keine 3:1. */
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  appearance: none;
+}
+
+.search input::placeholder { color: var(--ink-dim); }
+
+/* Das Kreuz sitzt rechts im Feld; das Feld lässt ihm Platz, damit langer Text
+   nicht darunter verschwindet. 2.75rem = 44 px Tippfläche. */
+.search-field { position: relative; }
+.search-field input { padding-right: 2.75rem; }
+.search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+
+.search-clear {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 2.75rem;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  color: var(--ink-dim);
+  background: none; border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.search-clear[hidden] { display: none; }
+.search-clear svg { width: 1.125rem; height: 1.125rem; display: block; }
+.search-clear:hover { color: var(--accent); }
+.search-clear:focus-visible { outline-offset: -4px; }
+
+.search input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.search-status { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--ink-dim); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* Beim Zurückkommen stellt nav.js erst die Scrollposition wieder her, dann
+     filtert search.js — ohne diese Zeile zöge Chromes Scroll-Verankerung die
+     Seite beim Ausblenden der Karten woandershin. */
+  overflow-anchor: none;
+}
+
+.card {
+  position: relative; /* verankert das „+" des Mixplans */
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+/* Anheben nur für den Kartenlink, nicht für das „+" darin: Das bleibt nach einem Tipp
+   fokussiert (und auf dem Telefon „gehovert"), die Karte sähe dauerhaft gewählt aus —
+   und hob sich unter dem Finger, sodass ein zweiter Tipp am unteren Rand des „+" schon
+   den Link traf. */
+.card:has(> a:hover), .card:has(> a:focus-visible) { border-color: var(--accent); transform: translateY(-2px); }
+.card[hidden] { display: none; }
+
+/* „+" oben rechts im Kartenbild (mixplan.js): ein Glas mehr auf den Mixplan, ohne das
+   Rezept zu öffnen. Feste Farben wie bei der Lightbox — der Knopf liegt auf einem Foto,
+   nicht auf dem Seitenhintergrund. Geplant trägt er die Akzentfarbe und die Zahl der
+   Gläser als Plakette, wie das Mixplan-Symbol in der Kopfzeile. 44 px Tippfläche. */
+.karten-plus {
+  position: absolute; top: 0.5rem; right: 0.5rem;
+  display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem; padding: 0;
+  color: #fff;
+  background: rgb(0 0 0 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.35); border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.karten-plus[hidden] { display: none; }
+.karten-plus svg { width: 1.25rem; height: 1.25rem; display: block; }
+.karten-plus:hover { background: rgb(0 0 0 / 0.75); }
+.karten-plus.geplant { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.karten-plus.geplant:hover { border-color: #fff; }
+/* Der Fokusring liegt auf dem Foto, nicht auf dem Seitenhintergrund: weiß auf einem
+   dunklen Hof, damit er auf jedem Bild zu sehen ist. */
+.karten-plus:focus-visible { outline-color: #fff; box-shadow: 0 0 0 6px rgb(0 0 0 / 0.6); }
+.karten-zahl {
+  position: absolute; top: -0.3rem; right: -0.3rem;
+  min-width: 1.25rem; height: 1.25rem; padding: 0 0.3rem;
+  display: grid; place-items: center;
+  font-size: 0.72rem; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent); background: var(--bg-raised);
+  border: 1px solid var(--accent); border-radius: 999px;
+}
+.karten-zahl[hidden] { display: none; }
+.card > a { display: block; text-decoration: none; height: 100%; }
+
+.card img, .card .thumb {
+  display: block;
+  width: 100%;
+  height: auto; /* sonst gewinnt das height-Attribut über aspect-ratio */
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.card-body { padding: 0.9rem 1rem 1.1rem; }
+
+.card-body h2 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin: 0 0 0.3rem;
+}
+
+/* Ein Satz dazu, wie der Drink schmeckt — steht zwischen Namen und Basis */
+.card-sub {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink-dim);
+}
+
+.card-base {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.card-ing { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--ink-dim); }
+
+.empty { color: var(--ink-dim); padding: 2rem 0; }
+
+/* Platzhalter, wenn kein Foto vorhanden ist */
+
+/* display muss spezifischer sein als `.card .thumb { display: block }` */
+.card .thumb.placeholder,
+.recipe-photo.placeholder {
+  display: grid;
+  place-items: center;
+}
+
+.placeholder {
+  background: linear-gradient(150deg, #3b2f22, #241d16);
+}
+
+.placeholder span {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  color: rgb(255 255 255 / 0.5);
+}
+
+.placeholder[data-base="gin"]        { background: linear-gradient(150deg, #2f4a4a, #1b2b2b); }
+.placeholder[data-base="sekt"]       { background: linear-gradient(150deg, #6d5a26, #33290f); }
+.placeholder[data-base="wodka"]      { background: linear-gradient(150deg, #3a2c22, #201812); }
+.placeholder[data-base="rum"]        { background: linear-gradient(150deg, #2c4630, #17251a); }
+.placeholder[data-base="select"]     { background: linear-gradient(150deg, #6d2222, #331010); }
+.placeholder[data-base="sarti"]      { background: linear-gradient(150deg, #7a2b3a, #3a141c); }
+.placeholder[data-base="aperol"]     { background: linear-gradient(150deg, #a1521a, #4a230b); }
+.placeholder[data-base="limoncello"] { background: linear-gradient(150deg, #8a7620, #3f360c); }
+
+/* Rezeptseite */
+
+.recipe { padding: 2rem 0 0; }
+
+.recipe-head { display: grid; gap: 1.75rem; align-items: start; }
+
+@media (min-width: 700px) {
+  .recipe-head { grid-template-columns: 260px 1fr; gap: 2.25rem; }
+}
+
+.recipe-photo {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Auf schmalen Displays als Banner, damit der Titel sofort sichtbar ist */
+@media (max-width: 699px) {
+  .recipe-photo {
+    max-width: none;
+    aspect-ratio: 16 / 10;
+    object-position: center 35%;
+  }
+}
+
+.recipe-title h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  line-height: 1.08;
+  margin: 0;
+}
+
+.subtitle { margin: 0.35rem 0 0; color: var(--ink-dim); font-style: italic; }
+
+.meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1.5rem 0 0; }
+.meta dt {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.meta dd { margin: 0.15rem 0 0; font-weight: 500; }
+
+.ingredients, .preparation, .verwandt, .related { margin-top: 2.75rem; }
+
+.ingredients h2, .preparation h2, .verwandt h2, .related h2 {
+  font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 0.75rem;
+}
+
+.ingredients table { width: 100%; border-collapse: collapse; max-width: 480px; }
+
+.ingredients thead th {
+  text-align: left;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim); font-weight: 500;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Die Zutat-Namen sind Zeilenköpfe (th scope="row") — für Vorlesehilfen,
+   optisch aber gewöhnliche Zellen. */
+.ingredients tbody th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.ingredients tbody th, .ingredients td { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+
+/* Die Mengen sind beim Mixen das Wichtigste — volle Helligkeit statt gedämpft,
+   und gleich breite Ziffern, damit die Spalte auf einen Blick zu lesen ist.
+   Kein nowrap: Eine seltene lange Menge („ca. 12 Blätter") darf umbrechen,
+   statt die Tabelle auf schmalen Telefonen aus dem Bild zu schieben. Für mehrere
+   Gläser hochgerechnete Mengen (mixplan.js) brechen dabei nur zwischen ihren Teilen. */
+.ingredients td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.preparation p { margin: 0; max-width: 34em; }
+
+/* Hinweise nach der Anleitung — rohes Eiweiß, Zuckersirup, Ersatzzutaten.
+   Nicht h2 + p: das ist die Anleitung selbst und bleibt normal hell. */
+.preparation > :not(h2) + p {
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+}
+
+/* Zubereitung als Schritte, falls das Rezept eine Liste statt Prosa benutzt */
+.preparation ol, .preparation ul { margin: 0; padding-left: 1.5rem; max-width: 34em; }
+.preparation li { margin-bottom: 0.45rem; }
+.preparation li:last-child { margin-bottom: 0; }
+.preparation li::marker { color: var(--accent); font-size: 0.85em; }
+
+/* Verwandte Drinks: kleine Karten, Bild links, Name und Untertitel rechts — als
+   ganze Zeile tippbar und mit gut 70 px Höhe auch für den nassen Daumen. Am
+   Telefon untereinander, breiter bis zu drei nebeneinander. */
+.verwandt-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+  list-style: none; margin: 0; padding: 0;
+}
+
+.verwandt-liste a {
+  display: flex; align-items: center; gap: 0.9rem;
+  height: 100%;
+  padding: 0.5rem 0.9rem 0.5rem 0.5rem;
+  text-decoration: none;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s;
+}
+.verwandt-liste a:hover { border-color: var(--accent); }
+
+.verwandt-liste img, .verwandt-liste .thumb {
+  flex: none;
+  display: block;
+  width: 5rem; height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.verwandt-liste .thumb.placeholder { display: grid; place-items: center; }
+.verwandt-liste .placeholder span { font-size: 1.5rem; }
+
+.verwandt-text { display: flex; flex-direction: column; min-width: 0; }
+.verwandt-name { font-family: var(--serif); font-size: 1.05rem; line-height: 1.25; }
+.verwandt-sub {
+  margin-top: 0.15rem;
+  font-size: 0.8rem; font-style: italic; line-height: 1.35;
+  color: var(--ink-dim);
+}
+
+/* Die Stichwort-Chips haben keine sichtbare Überschrift mehr und gehören optisch
+   zu den Verwandten darüber — also näher heran. Ohne Verwandte bleibt der
+   normale Abstand zur Zubereitung. */
+.verwandt + .related { margin-top: 1.25rem; }
+
+/* Stichwort-Chips: mit gut 44 px Höhe und Luft dazwischen tippbar, ohne dass der
+   nasse Daumen in der Nachbarzeile landet. */
+.chips { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; margin: 0; padding: 0; }
+
+.chips a {
+  display: inline-block;
+  padding: 0.7rem 0.95rem;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+/* Basis-Chips in der Farbe des Basis-Labels auf den Karten — so sieht man, dass
+   "Gin" eine andere Art Filter ist als "leicht". Kontrast wie das Label selbst. */
+.chips a.basis { color: var(--accent); }
+
+/* Gefüllt ist nur der gewählte Chip; Hover zeigt nur einen Umriss. In der
+   Filterzeile zusätzlich nur, solange search.js eine Maus meldet (.maus):
+   Touchscreens halten :hover nach einem Tipp fest, bis man woanders hintippt —
+   der eben abgewählte Chip sah so weiter markiert aus. Eine Media Query wie
+   (hover: hover) taugt dafür nicht, das iPad meldet auch mit Maus „kein Hover".
+   Die Stichwort-Chips auf der Rezeptseite führen weg, dort bleibt nichts hängen. */
+.chips a.active { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+
+.related .chips a:hover,
+.filter-chips.maus a:not(.active):hover { color: var(--accent); border-color: var(--accent); }
+
+/* Die Filterzeile auf der Übersicht — unterhalb der klebenden Suche, darf mitscrollen. */
+.filter-chips { margin: 0.25rem 0 1.5rem; }
+
+/* Mixplan (mixplan.js). Alles, was das Skript zeigt oder versteckt und dabei ein
+   eigenes display setzt, braucht eine [hidden]-Regel — sonst gewönne display. */
+
+.mixplan-feld[hidden], .stepper[hidden], .mixplan-dazu[hidden], .mixplan-im[hidden],
+.mixleiste[hidden], .plan-aktionen[hidden], .auswahl-zahl[hidden],
+.mixplan-hinweis[hidden], .mixplan-ui[hidden] { display: none; }
+
+/* Knöpfe ohne Rahmen für Leeren und Rückgängig. „unsichtbar" statt hidden: Der Platz
+   bleibt, damit nichts nachrückt, wenn der Knopf kommt oder geht. */
+.leise {
+  min-height: 2.75rem; padding: 0 0.75rem;
+  font: inherit; font-size: 0.85rem;
+  color: var(--ink-dim);
+  background: none; border: 0; border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.leise:hover { color: var(--accent); }
+.unsichtbar { visibility: hidden; }
+
+/* Ein geteilter Mixplan, der auf einen eigenen trifft: oben auf der Seite, bis
+   entschieden ist. „Übernehmen" und „Rückgängig" teilen sich denselben Knopf. Die Knöpfe
+   sind gleich breit — auf dem Telefon untereinander über die ganze Breite, ab 560 px
+   nebeneinander —, so ändert der Wechsel der Beschriftung nichts an ihrer Fläche. */
+.geteilt {
+  margin-top: 1.5rem; padding: 1rem 1.1rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--accent); border-radius: var(--radius);
+}
+.geteilt[hidden] { display: none; }
+.geteilt-titel { margin: 0; font-weight: 600; color: var(--accent); }
+.geteilt-drinks { margin: 0.35rem 0 0; font-family: var(--serif); font-size: 1.05rem; line-height: 1.35; }
+.geteilt-hinweis { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--ink-dim); }
+.geteilt-knoepfe { display: grid; gap: 0.6rem; margin-top: 0.9rem; }
+@media (min-width: 35rem) {
+  .geteilt-knoepfe { grid-template-columns: 1fr 1fr; max-width: 28rem; }
+}
+.geteilt-knoepfe button {
+  min-height: 2.75rem; padding: 0 0.9rem;
+  font: inherit; font-weight: 500;
+  border: 1px solid var(--accent); border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.geteilt-uebernehmen { color: var(--accent-ink); background: var(--accent); }
+.geteilt-behalten { color: var(--accent); background: none; }
+
+/* Hinweis, wenn der Browser nichts speichern lässt */
+.mixplan-hinweis {
+  margin: 1rem 0 0; padding: 0.6rem 0.9rem;
+  font-size: 0.85rem; color: var(--ink);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+}
+
+/* − Zahl +: runde 44-px-Knöpfe. touch-action: manipulation, damit ein schneller
+   Doppeltipp auf iOS zweimal zählt, statt die Seite zu zoomen. */
+.stepper { display: flex; align-items: center; }
+.stepper-knopf {
+  flex: none;
+  display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem; padding: 0;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.stepper-knopf svg { width: 1.15rem; height: 1.15rem; display: block; }
+.stepper-knopf:hover:not([aria-disabled="true"]) { color: var(--accent); border-color: var(--accent); }
+.stepper-knopf[aria-disabled="true"] { opacity: 0.4; cursor: default; }
+.stepper-zahl { min-width: 5.5rem; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Rezeptseite: unter Basis/Glas/Garnitur/Werkzeug, auf dem Telefon also im unteren
+   Drittel des ersten Bildschirms — wo der Daumen ohnehin liegt. Ab 360 px Breite sind
+   beide Zustände gleich hoch, das Hinzufügen schiebt nichts; darunter rutscht der
+   Zähler in eine zweite Zeile, statt sich quetschen zu lassen. */
+.mixplan-feld {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem;
+  margin-top: 1.25rem;
+  min-height: 3rem;
+}
+/* 5rem fasst „99 Gläser" — und lässt „Im Mixplan" und Zähler bei 360 px nebeneinander. */
+.mixplan-feld .stepper-zahl { min-width: 5rem; }
+.mixplan-feld .mixplan-hinweis { flex-basis: 100%; margin: 0; }
+
+.mixplan-dazu {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  min-height: 3rem; padding: 0 1.1rem 0 0.9rem;
+  font: inherit; font-weight: 500;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent); border-radius: var(--radius);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.mixplan-dazu svg, .mixplan-im svg { width: 1.15rem; height: 1.15rem; flex: none; }
+.mixplan-dazu:hover { color: var(--accent-ink); background: var(--accent); }
+
+.mixplan-im {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 3rem;
+  font-weight: 500; text-decoration: none;
+  color: var(--accent);
+}
+.mixplan-im svg:last-child { width: 0.9rem; height: 0.9rem; }
+.mixplan-feld .stepper { margin-left: auto; }
+
+/* Die Mixleiste springt zu #titel — mit etwas Luft, statt den Namen an die Kante zu kleben. */
+.recipe-title { scroll-margin-top: 1rem; }
+
+/* Solange die Mixleiste unten klebt, gilt der Streifen dahinter nicht als sichtbar: Was
+   per Tab-Taste oder nach dem Hinzufügen ins Bild rückt, landet über ihr statt darunter. */
+html:has(.mixleiste:not([hidden])) {
+  scroll-padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 0.75rem);
+}
+
+/* Dasselbe oben auf der Übersicht: Unter der Kopfzeile klebt dort noch die Suche (gut
+   100 px) und verdeckte sonst ein per Shift+Tab angesteuertes „+" am oberen Kartenrand. */
+html:has(#grid) { scroll-padding-top: calc(var(--kopf-hoehe) + 7.5rem); }
+
+/* Mixleiste: klebt unten, solange die Rezeptseite läuft, und setzt sich am Ende von
+   <main> über die Fußzeile — sie deckt nie etwas dauerhaft zu. Der negative Rand nimmt
+   das Seitenpolster von <main> mit, die Leiste geht so von Rand zu Rand. Zurück und die
+   Mitte schmal, „Weiter" mit dem Namen des nächsten Drinks breit: Das ist der Tipp,
+   der beim Mixen am häufigsten kommt. */
+.mixleiste {
+  position: sticky; bottom: 0; z-index: 4;
+  display: grid; grid-template-columns: 3.5rem 6.5rem 1fr;
+  min-height: 60px;
+  margin: 2.5rem -1.25rem 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-strong);
+}
+.mixleiste a {
+  display: flex; align-items: center;
+  min-width: 0;
+  color: var(--ink); text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.mixleiste a:hover { color: var(--accent); }
+.mixleiste a:focus-visible { outline-offset: -3px; }
+.mixleiste svg { width: 1.25rem; height: 1.25rem; flex: none; }
+.leiste-zurueck { justify-content: center; }
+.leiste-mitte {
+  flex-direction: column; justify-content: center;
+  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+  line-height: 1.25;
+}
+.leiste-glaeser { font-variant-numeric: tabular-nums; }
+.leiste-stelle { font-size: 0.72rem; color: var(--ink-dim); }
+.leiste-weiter { gap: 0.5rem; padding: 0 1rem 0 1rem; justify-content: flex-end; text-align: right; }
+.leiste-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.leiste-klein {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.leiste-name {
+  font-family: var(--serif); font-size: 1.05rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Seiten Mixplan und Besorgen */
+
+.seiten-kopf { padding: 2rem 0 0; }
+.seiten-kopf h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  line-height: 1.08;
+  margin: 0;
+}
+.seiten-kopf p { margin: 0.35rem 0 0; color: var(--ink-dim); }
+.mixplan-noscript { margin: 1.5rem 0 0; }
+
+.zurueck-mixplan {
+  display: inline-flex; align-items: center; min-height: 2.75rem;
+  margin: 1.25rem 0 -0.75rem;
+  color: var(--ink-dim); font-size: 0.9rem; text-decoration: none;
+}
+.zurueck-mixplan:hover { color: var(--accent); }
+
+/* Summe links, Leeren/Rückgängig rechts mit fester Breite: Wird aus dem einen Knopf der
+   andere, bleibt er unter dem Finger. Oben ausgerichtet, denn der Text links darf
+   umbrechen — „10 Drinks · 20 Gläser" braucht bei 360 px zwei Zeilen, „Mixplan
+   geleert." eine, und mittig ausgerichtet wanderte der Knopf dabei mit. */
+.summen-zeile {
+  display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.summen-zeile p {
+  display: flex; align-items: center; min-height: 2.75rem;
+  margin: 0; font-variant-numeric: tabular-nums;
+}
+.summen-zeile .leise { min-width: 10.5rem; margin-right: -0.75rem; text-align: right; }
+.mixplan-leer { margin: 0.5rem 0 0; color: var(--ink-dim); font-size: 0.9rem; }
+
+.plan-liste { list-style: none; margin: 0.75rem 0 0; padding: 0; }
+.plan-zeile {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.75rem;
+  min-height: 64px; padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.plan-zeile:first-child { border-top: 1px solid var(--border); }
+.plan-link {
+  display: flex; align-items: center; gap: 0.75rem;
+  min-width: 0; min-height: 2.75rem;
+  text-decoration: none;
+}
+.plan-link:hover .plan-name { color: var(--accent); }
+.plan-bild {
+  flex: none;
+  display: block;
+  width: 3.5rem; height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.plan-bild.placeholder { display: grid; place-items: center; }
+.plan-bild.placeholder span { font-size: 1.1rem; }
+.plan-name { margin: 0; font-family: var(--serif); font-size: 1.1rem; line-height: 1.25; overflow-wrap: anywhere; }
+.plan-zeile .stepper-zahl { min-width: 2.5rem; font-size: 1.15rem; }
+/* „Gläser" hinter der Zahl sehen nur Papier (siehe print) und Vorlesehilfen — am
+   Bildschirm sagt es die Summe oben. */
+.einheit {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Grabstein einer entfernten Zeile — gleiche Höhe (inline gesetzt), leiser Text. */
+.plan-zeile.entfernt .plan-name { font-family: var(--sans); font-size: 0.9rem; color: var(--ink-dim); }
+.plan-zeile.entfernt .leise { margin-right: -0.75rem; }
+.veraltet-hinweis { font-family: var(--sans); font-size: 0.8rem; color: var(--ink-dim); }
+
+.plan-aktionen { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+.knopf {
+  flex: 1;
+  display: grid; place-items: center;
+  min-height: 3.5rem; padding: 0 1rem;
+  font-weight: 500; text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--accent); border-radius: var(--radius);
+  -webkit-tap-highlight-color: transparent;
+}
+.knopf.voll { color: var(--accent-ink); background: var(--accent); }
+.knopf:hover { color: var(--accent-ink); background: var(--accent); }
+
+/* Auswahl zum Hinzufügen: aufklappbar, jede Zeile ein großer Knopf. */
+.mixplan-auswahl { margin-top: 1.5rem; }
+.mixplan-auswahl summary {
+  display: flex; align-items: center;
+  min-height: 3.25rem; padding: 0 1rem;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px dashed var(--border-strong); border-radius: var(--radius);
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mixplan-auswahl summary::-webkit-details-marker { display: none; }
+/* Das Zeichen ist Schmuck — "/ ''" hält es aus dem vorgelesenen Namen, auf- und
+   zugeklappt sagt die Vorlesehilfe selbst. Ältere Browser verwerfen die zweite Zeile. */
+.mixplan-auswahl summary::before {
+  content: "+"; content: "+" / "";
+  margin-right: 0.6rem; font-size: 1.3rem; line-height: 1;
+}
+.mixplan-auswahl[open] summary::before { content: "−"; content: "−" / ""; }
+.auswahl-liste { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.auswahl-zeile {
+  display: flex; align-items: center; gap: 0.75rem;
+  width: 100%; min-height: 3.5rem; padding: 0.35rem 0;
+  font: inherit; text-align: left;
+  color: var(--ink);
+  background: none;
+  border: 0; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.auswahl-bild {
+  flex: none;
+  display: block;
+  width: 3.5rem; height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.auswahl-bild.placeholder { display: grid; place-items: center; }
+.auswahl-bild.placeholder span { font-size: 1.1rem; }
+.auswahl-name { flex: 1; min-width: 0; font-family: var(--serif); font-size: 1.05rem; line-height: 1.25; }
+.auswahl-zahl {
+  min-width: 1.6rem; padding: 0.1rem 0.45rem;
+  font-size: 0.8rem; font-weight: 700; text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink); background: var(--accent);
+  border-radius: 999px;
+}
+.auswahl-plus {
+  flex: none;
+  display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong); border-radius: 999px;
+}
+.auswahl-plus svg { width: 1.15rem; height: 1.15rem; }
+.auswahl-zeile:hover .auswahl-plus { border-color: var(--accent); }
+
+/* Unter 360 px brauchen die Namen den Platz der Vorschaubilder — auch der Platzhalter,
+   dessen display: grid sonst gewönne. */
+@media (max-width: 359px) {
+  .plan-bild, .plan-bild.placeholder { display: none; }
+}
+
+/* Besorgen: Gruppen wie die Abschnitte der Rezeptseite, jede Zeile ein Kästchen mit
+   Name, Menge rechts (wie in der Zutatentabelle) und darunter, für wen. */
+.besorgen-veraltet { list-style: none; margin: 0.75rem 0 0; padding: 0; font-size: 0.85rem; color: var(--ink-dim); }
+.besorgen-leer { margin: 1rem 0 0; color: var(--ink-dim); }
+/* Polster nach dem Muster des Zurück-Links: 44 px Tippfläche, ohne die Zeile zu sprengen. */
+.besorgen-leer a { display: inline-block; padding: 0.65rem 0; margin: -0.65rem 0; color: var(--accent); }
+.besorgen-gruppe { margin-top: 2rem; }
+.besorgen-gruppe h2 {
+  font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 0.25rem;
+}
+.besorgen-liste { list-style: none; margin: 0; padding: 0; max-width: 560px; }
+.posten {
+  display: grid; grid-template-columns: 1.5rem 1fr auto; column-gap: 0.75rem; align-items: baseline;
+  min-height: 48px; padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.posten input {
+  width: 1.5rem; height: 1.5rem; margin: 0;
+  align-self: center;
+  accent-color: var(--accent);
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.posten-name { overflow-wrap: anywhere; }
+.posten-menge { max-width: 55vw; text-align: right; font-variant-numeric: tabular-nums; }
+.posten-zusatz, .posten-fuer { grid-column: 2 / -1; font-size: 0.8rem; color: var(--ink-dim); }
+.posten-zusatz { text-align: right; font-variant-numeric: tabular-nums; }
+/* inline-block: Das Durchstreichen einer abgehakten Zeile läuft sonst durch die kleinere
+   Schrift der Marke und sieht dort wie ein Unterstrich aus. */
+.optional-marke {
+  display: inline-block;
+  font-size: 0.72rem; letter-spacing: 0.05em;
+  color: var(--ink-dim);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 0 0.4rem;
+  white-space: nowrap;
+}
+/* Abgehakt bleibt die Zeile, wo sie ist — nur durchgestrichen und leiser. */
+.posten.abgehakt .posten-name, .posten.abgehakt .posten-menge {
+  color: var(--ink-dim);
+  text-decoration: line-through;
+}
+
+/* Foto vergrößern */
+
+.photo-zoom { display: block; cursor: zoom-in; border-radius: var(--radius); }
+.photo-zoom:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Overlay-Ansicht; der Hintergrund ist immer dunkel, daher feste Farben statt Variablen */
+.lightbox {
+  /* fit-content statt auto: sonst füllt der Dialog die Breite und das Bild klebt links */
+  width: fit-content;
+  height: fit-content;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+}
+
+.lightbox::backdrop { background: rgb(8 6 4 / 0.92); }
+
+.lightbox img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: 94vh;
+  border-radius: var(--radius);
+}
+
+/* Der Hintergrund schließt, das Bild nicht — der Zeiger soll das zeigen */
+.lightbox { cursor: zoom-out; }
+.lightbox img { cursor: default; }
+
+.lightbox-close {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #fff;
+  background: rgb(0 0 0 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lightbox-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Seite dahinter nicht mitscrollen lassen. Hängt am [open]-Attribut des Dialogs statt an
+   einer Klasse aus dem Skript — so kann die Sperre nicht hängen bleiben, wenn ein Ereignis
+   einmal ausbleibt. */
+html:has(.lightbox[open]), html:has(.lightbox[open]) body { overflow: hidden; }
+
+.lightbox[open], .lightbox[open]::backdrop { animation: lightbox-in 0.18s ease-out; }
+
+@keyframes lightbox-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  .lightbox[open], .lightbox[open]::backdrop { animation: none; }
+}
+
+/* Drucken: ein Rezept als sauberes Blatt für die Kühlschranktür — ohne
+   Bedienelemente, die auf Papier nichts tun. */
+@media print {
+  .back, .kopf-aktionen, .verbindungs-hinweis,
+  .search, .chips, .verwandt, .related,
+  .site-footer { display: none !important; }
+  /* Mixplan: Bedienung weg; die Besorgen-Liste wird zum Einkaufszettel mit Kästchen,
+     der Mixplan zur Liste „Negroni … 2 Gläser". */
+  .mixplan-feld, .mixleiste, .mixplan-hinweis, .mixplan-auswahl, .plan-aktionen, .karten-plus, .geteilt,
+  .plan-zeile button, .summen-zeile button, .zurueck-mixplan,
+  .plan-zeile.entfernt { display: none !important; }
+  .einheit { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  /* Papier ist hell, auch wenn das Telefon dunkel eingestellt ist — sonst druckt die
+     helle Schrift des dunklen Schemas blassgrau, und der Einkaufszettel ist kaum lesbar. */
+  :root {
+    color-scheme: light;
+    --bg: #fff; --bg-raised: #fff; --border: #e3d9c9; --border-strong: #8f826f;
+    --ink: #1e1a15; --ink-dim: #6d6355; --accent: #9a5c0f; --accent-ink: #fff;
+  }
+  /* Auf Papier klebt nichts — die Kopfzeile ist dort nur noch der Schriftzug. */
+  .site-header { position: static; height: auto; padding: 0; border: 0; }
+  .recipe-head { grid-template-columns: none; }
+  .recipe-photo { max-width: 220px; aspect-ratio: 3 / 4; }
+}

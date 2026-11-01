@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mixplan · Cocktails</title>
+<meta name="description" content="Drinks für heute vormerken, zusammensuchen und der Reihe nach mixen">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<meta name="build" content="2.2.32">
+<meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbf7f0" media="(prefers-color-scheme: light)">
+<meta property="og:site_name" content="Cocktails">
+<meta property="og:title" content="Mixplan">
+<meta property="og:description" content="Drinks für heute vormerken, zusammensuchen und der Reihe nach mixen">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:image" content="https://l2p-.github.io/cocktails/assets/icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://l2p-.github.io/cocktails/mixplan/">
+<link rel="stylesheet" href="/cocktails/assets/style.css?v=2.2.32">
+<link rel="icon" href="/cocktails/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/cocktails/assets/apple-touch-icon.png">
+<link rel="manifest" href="/cocktails/manifest.webmanifest">
+</head>
+<body>
+<header class="site-header">
+  <a class="wordmark" href="/cocktails/">
+    <svg class="wordmark-logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8h20L17.5 18.5V25h4.5v2h-12v-2H14v-6.5L6 8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="23" cy="9.5" r="2.5" fill="currentColor"/></svg>
+    <span class="wordmark-text">Cocktails</span>
+  </a>
+  <a class="back" href="/cocktails/">&larr; Alle Rezepte</a>
+  <div class="kopf-aktionen">
+    <a class="mixplan-knopf" href="/cocktails/mixplan/" aria-label="Mixplan" title="Mixplan öffnen" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="3" rx="1"/><path d="M9 11h6M9 15h4"/></svg>
+      <span class="mixplan-zahl" hidden></span>
+    </a>
+    <button type="button" class="teilen-knopf" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.5V3.5M8 7.5l4-4 4 4M8.5 10.5H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1.5"/></svg>
+    </button>
+    <span class="teilen-hinweis" role="status"></span>
+  </div>
+</header>
+
+<main>
+
+<div class="mixplan-seite" id="mixplan" data-teilen="plan">
+  <div class="seiten-kopf">
+    <h1>Mixplan</h1>
+    <p>Was heute ins Glas kommt.</p>
+  </div>
+
+  <noscript><p class="mixplan-noscript">Der Mixplan merkt sich die geplanten Drinks in diesem Browser und braucht dafür JavaScript.</p></noscript>
+
+  <div class="mixplan-ui" hidden>
+    <p class="mixplan-hinweis" hidden>Dieser Browser speichert nichts — der Mixplan hält nur, solange die Seite offen ist.</p>
+    <section class="geteilt" aria-label="Geteilter Mixplan" hidden></section>
+    <div class="summen-zeile">
+      <p class="mixplan-summe"></p>
+      <button type="button" class="leise" data-aktion="leeren"></button>
+    </div>
+    <p class="mixplan-leer" hidden>Unten auswählen, auf der Übersicht das „+“ oder auf einer Rezeptseite „Auf den Mixplan“ tippen.</p>
+
+    <ol class="plan-liste" aria-label="Geplante Drinks"></ol>
+
+    <div class="plan-aktionen" hidden>
+      <a class="knopf voll" href="/cocktails/mixplan/besorgen/">Besorgen</a>
+      <a class="knopf" data-rolle="mixen">Mixen</a>
+    </div>
+    <details class="mixplan-auswahl">
+      <summary>Cocktail hinzufügen</summary>
+      <ul class="auswahl-liste">
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="aperol-spritz">
+          <img class="auswahl-bild" src="/cocktails/assets/img/aperol-spritz-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Aperol Spritz</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="corpse-reviver-2">
+          <img class="auswahl-bild" src="/cocktails/assets/img/corpse-reviver-2-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Corpse Reviver #2</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="espresso-martini">
+          <img class="auswahl-bild" src="/cocktails/assets/img/espresso-martini-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Espresso Martini</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="french-75">
+          <img class="auswahl-bild" src="/cocktails/assets/img/french-75-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">French 75</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="gin-tonic">
+          <img class="auswahl-bild" src="/cocktails/assets/img/gin-tonic-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Gin &amp; Tonic</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="gin-fizz">
+          <span class="auswahl-bild thumb placeholder" data-base="gin" aria-hidden="true"><span>G</span></span>
+          <span class="auswahl-name">Gin Fizz</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="limoncello-spritz">
+          <img class="auswahl-bild" src="/cocktails/assets/img/limoncello-spritz-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Limoncello Spritz</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="mojito">
+          <img class="auswahl-bild" src="/cocktails/assets/img/mojito-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Mojito</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="negroni">
+          <img class="auswahl-bild" src="/cocktails/assets/img/negroni-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Negroni</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="negroni-sbagliato">
+          <img class="auswahl-bild" src="/cocktails/assets/img/negroni-sbagliato-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Negroni Sbagliato</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="negroni-sbagliato-speciale">
+          <img class="auswahl-bild" src="/cocktails/assets/img/negroni-sbagliato-speciale-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Negroni Sbagliato speciale ++</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="old-opera">
+          <img class="auswahl-bild" src="/cocktails/assets/img/old-opera-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Old Opera</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="sarti-spritz">
+          <img class="auswahl-bild" src="/cocktails/assets/img/sarti-spritz-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">Sarti Spritz</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="select-spritz">
+          <span class="auswahl-bild thumb placeholder" data-base="select" aria-hidden="true"><span>S</span></span>
+          <span class="auswahl-name">Select Spritz</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="the-last-word">
+          <span class="auswahl-bild thumb placeholder" data-base="gin" aria-hidden="true"><span>T</span></span>
+          <span class="auswahl-name">The Last Word</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+        <li><button type="button" class="auswahl-zeile" data-aktion="waehlen" data-slug="white-lady">
+          <img class="auswahl-bild" src="/cocktails/assets/img/white-lady-card-600.webp" alt="" width="400" height="300" loading="lazy">
+          <span class="auswahl-name">White Lady</span>
+          <span class="auswahl-zahl" hidden></span>
+          <span class="auswahl-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+        </button></li>
+      </ul>
+    </details>
+
+    <p class="visually-hidden mixplan-status" role="status"></p>
+  </div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <p>16 Rezepte <span class="version">v2.2.32</span> <span class="version-info">Build vom 2026-11-01 · 6ac8937</span></p>
+</footer>
+<p class="visually-hidden" id="nav-status" aria-live="polite"></p>
+<script type="application/json" id="rezept-index">[["aperol-spritz","Aperol Spritz","/cocktails/rezepte/aperol-spritz/"],["corpse-reviver-2","Corpse Reviver #2","/cocktails/rezepte/corpse-reviver-2/"],["espresso-martini","Espresso Martini","/cocktails/rezepte/espresso-martini/"],["french-75","French 75","/cocktails/rezepte/french-75/"],["gin-tonic","Gin & Tonic","/cocktails/rezepte/gin-tonic/"],["gin-fizz","Gin Fizz","/cocktails/rezepte/gin-fizz/"],["limoncello-spritz","Limoncello Spritz","/cocktails/rezepte/limoncello-spritz/"],["mojito","Mojito","/cocktails/rezepte/mojito/"],["negroni","Negroni","/cocktails/rezepte/negroni/"],["negroni-sbagliato","Negroni Sbagliato","/cocktails/rezepte/negroni-sbagliato/"],["negroni-sbagliato-speciale","Negroni Sbagliato speciale ++","/cocktails/rezepte/negroni-sbagliato-speciale/"],["old-opera","Old Opera","/cocktails/rezepte/old-opera/"],["sarti-spritz","Sarti Spritz","/cocktails/rezepte/sarti-spritz/"],["select-spritz","Select Spritz","/cocktails/rezepte/select-spritz/"],["the-last-word","The Last Word","/cocktails/rezepte/the-last-word/"],["white-lady","White Lady","/cocktails/rezepte/white-lady/"]]</script>
+<script src="/cocktails/assets/mixplan.js?v=2.2.32" defer></script>
+
+<script src="/cocktails/assets/nav.js?v=2.2.32" defer></script>
+<script src="/cocktails/assets/wakelock.js?v=2.2.32" defer></script>
+<script src="/cocktails/assets/share.js?v=2.2.32" defer></script>
+</body>
+</html>
